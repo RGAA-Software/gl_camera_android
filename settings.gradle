@@ -1,0 +1,5 @@
+rootProject.name = "SharkCamera"
+include ':app'
+include ':graphics'
+include ':opencv4.5.2'
+include ':basic'
