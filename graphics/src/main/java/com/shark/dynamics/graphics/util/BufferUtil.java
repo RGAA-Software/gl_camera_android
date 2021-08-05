@@ -47,4 +47,12 @@ public class BufferUtil {
         return ib;
     }
 
+    public static IntBuffer createIntBuffer(int[] data) {
+        IntBuffer ib = createIntBuffer(data.length);
+        ib.put(data);
+        ib.position(0);
+        return ib;
+    }
+
+
 }

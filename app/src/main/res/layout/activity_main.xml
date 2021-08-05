@@ -6,10 +6,10 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <com.shark.dynamics.sharkcamera.CameraPreview
-        android:id="@+id/id_camera_preview"
+    <Button
+        android:id="@+id/id_start_preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        />
+        android:layout_height="wrap_content"
+        android:text="Start Preview"/>
 
 </RelativeLayout>
