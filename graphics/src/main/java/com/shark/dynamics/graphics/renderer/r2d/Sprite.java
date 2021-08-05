@@ -229,6 +229,14 @@ public class Sprite extends I2DRenderer {
         buffer[idx + 7] = line[7];
     }
 
+    public void updateTexture(Texture texture) {
+        mTexture = texture;
+    }
+
+    public Texture getTexture() {
+        return mTexture;
+    }
+
     @Override
     public void render(float delta) {
         super.render(delta);

@@ -2,6 +2,7 @@ package com.shark.dynamics.graphics.renderer.r2d;
 
 import com.shark.dynamics.graphics.Director;
 import com.shark.dynamics.graphics.renderer.IRenderer;
+import com.shark.dynamics.graphics.shader.Shader;
 
 import static android.opengl.GLES20.glUniformMatrix4fv;
 
@@ -43,6 +44,10 @@ public class I2DRenderer extends IRenderer {
         super.scaleTo(x, y, z);
         mWidth = mOriginWidth * x;
         mHeight = mOriginHeight * y;
+    }
+
+    public void updateShader(Shader shader) {
+        mShader = shader;
     }
 
     @Override

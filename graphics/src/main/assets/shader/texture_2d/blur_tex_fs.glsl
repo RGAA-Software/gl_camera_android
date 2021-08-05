@@ -59,5 +59,5 @@ vec4 blur2(sampler2D image, vec2 uv) {
 
 void main()
 {
-    FragColor = blur2(image, outTex);
+    FragColor = blur(image, outTex);
 }

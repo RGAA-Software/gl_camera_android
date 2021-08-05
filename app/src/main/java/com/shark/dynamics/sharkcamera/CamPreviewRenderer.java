@@ -10,14 +10,10 @@ import android.opengl.GLSurfaceView;
 import com.shark.dynamics.graphics.Director;
 import com.shark.dynamics.graphics.renderer.framebuffer.FrameBuffer;
 import com.shark.dynamics.graphics.renderer.r2d.Sprite;
-import com.shark.dynamics.graphics.renderer.r2d.anim.FrameAnimation;
-import com.shark.dynamics.graphics.renderer.r2d.bezier.BezierPointGenerator;
-import com.shark.dynamics.graphics.renderer.r3d.model.Model;
 import com.shark.dynamics.graphics.renderer.texture.Texture;
+import com.shark.dynamics.graphics.shader.Shader;
 import com.shark.dynamics.sharkcamera.effect.IEffect;
-
-import org.joml.Vector2f;
-import org.joml.Vector3f;
+import com.shark.dynamics.sharkcamera.posteffect.IPostEffect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,9 +35,10 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
     private int mSurfaceTextureId;
     private final float[] mCamTransformMatrix = new float[16];
 
+    private FrameBuffer mEffectFrameBuffer;
     private final List<IEffect> mEffects = new ArrayList<>();
 
-    private FrameBuffer mFrameBuffer;
+    private IPostEffect mPostEffect = null;
     private Sprite mPostSprite;
 
     public CamPreviewRenderer(Context context) {
@@ -63,19 +60,24 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
         GLES30.glBindVertexArray(0);
         mCamSprite = new CamSprite(mSurfaceTextureId);
 
-        mFrameBuffer = new FrameBuffer();
-        mFrameBuffer.init(width, height);
+        mEffectFrameBuffer = new FrameBuffer();
+        mEffectFrameBuffer.init(width, height);
+
         mPostSprite = new Sprite(
-                new Texture(mFrameBuffer.getFrameBufferTexId(), width, height), Sprite.SpriteType.kRect);
+                new Texture(mEffectFrameBuffer.getFrameBufferTexId(), width, height), Sprite.SpriteType.kRect);
         mPostSprite.scaleTo(0.5f);
 
         initEffects();
+        initPostEffects();
+
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        mSurfaceTexture.updateTexImage();
-        mFrameBuffer.begin();
+        if (hasPostEffect()) {
+            mEffectFrameBuffer.begin();
+        }
+
         GLES30.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
 
@@ -89,20 +91,21 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
         float delta = currentTime - mLastRenderTime;
         delta = delta*1.0f/1000;
 
-
+        mSurfaceTexture.updateTexImage();
         mSurfaceTexture.getTransformMatrix(mCamTransformMatrix);
-
         mCamSprite.updateTransformMatrix(mCamTransformMatrix);
-
         mCamSprite.render();
 
         renderEffects(delta);
 
-        mFrameBuffer.end();
+        if (hasPostEffect()) {
+            mEffectFrameBuffer.end();
+            GLES30.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+            GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
 
-        GLES30.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
-        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
-        mPostSprite.render(delta);
+            mPostSprite.updateShader(mPostEffect.getShader());
+            mPostSprite.render(delta);
+        }
 
         mLastRenderTime = currentTime;
     }
@@ -143,6 +146,22 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
 
     public void clearEffects() {
         mEffects.clear();
+    }
+
+    // post effect
+
+    public boolean hasPostEffect() {
+        return mPostEffect != null;
+    }
+
+    private void initPostEffects() {
+        if (mPostEffect != null && !mPostEffect.isInit()) {
+            mPostEffect.init();
+        }
+    }
+
+    public void setPostEffect(IPostEffect pe) {
+        mPostEffect = pe;
     }
 
 }

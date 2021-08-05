@@ -20,7 +20,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Camera2SurfaceActivity" />
+        <activity android:name=".CamActivity" />
     </application>
 
 </manifest>
