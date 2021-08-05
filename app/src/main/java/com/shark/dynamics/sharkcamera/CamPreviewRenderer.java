@@ -8,10 +8,12 @@ import android.opengl.GLES30;
 import android.opengl.GLSurfaceView;
 
 import com.shark.dynamics.graphics.Director;
+import com.shark.dynamics.graphics.renderer.framebuffer.FrameBuffer;
 import com.shark.dynamics.graphics.renderer.r2d.Sprite;
 import com.shark.dynamics.graphics.renderer.r2d.anim.FrameAnimation;
 import com.shark.dynamics.graphics.renderer.r2d.bezier.BezierPointGenerator;
 import com.shark.dynamics.graphics.renderer.r3d.model.Model;
+import com.shark.dynamics.graphics.renderer.texture.Texture;
 import com.shark.dynamics.sharkcamera.effect.IEffect;
 
 import org.joml.Vector2f;
@@ -39,6 +41,9 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
 
     private final List<IEffect> mEffects = new ArrayList<>();
 
+    private FrameBuffer mFrameBuffer;
+    private Sprite mPostSprite;
+
     public CamPreviewRenderer(Context context) {
         mContext = context;
     }
@@ -58,13 +63,19 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
         GLES30.glBindVertexArray(0);
         mCamSprite = new CamSprite(mSurfaceTextureId);
 
-        initEffects();
+        mFrameBuffer = new FrameBuffer();
+        mFrameBuffer.init(width, height);
+        mPostSprite = new Sprite(
+                new Texture(mFrameBuffer.getFrameBufferTexId(), width, height), Sprite.SpriteType.kRect);
+        mPostSprite.scaleTo(0.5f);
 
-        GLES30.glBindVertexArray(0);
+        initEffects();
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
+        mSurfaceTexture.updateTexImage();
+        mFrameBuffer.begin();
         GLES30.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
 
@@ -78,13 +89,20 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
         float delta = currentTime - mLastRenderTime;
         delta = delta*1.0f/1000;
 
-        mSurfaceTexture.updateTexImage();
+
         mSurfaceTexture.getTransformMatrix(mCamTransformMatrix);
 
         mCamSprite.updateTransformMatrix(mCamTransformMatrix);
+
         mCamSprite.render();
 
         renderEffects(delta);
+
+        mFrameBuffer.end();
+
+        GLES30.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
+        mPostSprite.render(delta);
 
         mLastRenderTime = currentTime;
     }
