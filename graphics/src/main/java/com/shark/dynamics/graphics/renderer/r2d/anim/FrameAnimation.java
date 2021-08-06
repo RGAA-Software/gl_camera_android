@@ -63,6 +63,8 @@ public class FrameAnimation extends I2DRenderer {
     private float[] mVertexArray;
     private FloatBuffer mVertexBuffer;
 
+    private boolean mMovable = true;
+
     public FrameAnimation(String texPath, int cols, int rows) {
         String vs = Director.getInstance().loaderShaderFromAssets("shader/base_2d_vs.glsl");
         String fs = Director.getInstance().loaderShaderFromAssets("shader/texture_2d/anim_tex_fs.glsl");
@@ -171,7 +173,7 @@ public class FrameAnimation extends I2DRenderer {
             }
         }
         Texture texture = mTextures.get(mCurrentIndex);
-        texture.active(mShader, 0);
+        texture.active(mShader, 2);
 
         if (mRunLapses > mRunTime) {
             mRunLapses = 0;
@@ -189,9 +191,11 @@ public class FrameAnimation extends I2DRenderer {
 
         mShader.setUniformVec3("tintColor", mTintColor.x, mTintColor.y, mTintColor.z);
 
-        float angel = getAngel(mLastPoint, mCurrentPoint);
-        translateTo(mCurrentPoint.x, mCurrentPoint.y, 0);
-        rotateTo((float)Math.toDegrees(angel) + 270, 0, 0, 1);
+        if (mMovable) {
+            float angel = getAngel(mLastPoint, mCurrentPoint);
+            translateTo(mCurrentPoint.x, mCurrentPoint.y, 0);
+            rotateTo((float) Math.toDegrees(angel) + 270, 0, 0, 1);
+        }
 
         mModelMatrix.identity();
         mModelMatrix.translate(mTranslate);
@@ -222,5 +226,9 @@ public class FrameAnimation extends I2DRenderer {
             return 0;
         }
         return (float)Math.atan2(dy, dx);
+    }
+
+    public void setMovable(boolean move) {
+        mMovable = move;
     }
 }

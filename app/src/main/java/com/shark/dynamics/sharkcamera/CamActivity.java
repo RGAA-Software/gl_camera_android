@@ -20,11 +20,16 @@ import android.util.Size;
 import android.view.Surface;
 
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.shark.dynamics.sharkcamera.effect.TestEffect;
+import com.shark.dynamics.sharkcamera.effect.AnimEffect1;
+import com.shark.dynamics.sharkcamera.effect.AnimEffect2;
 import com.shark.dynamics.sharkcamera.posteffect.BlurEffect;
 import com.shark.dynamics.sharkcamera.posteffect.GrayEffect;
+import com.shark.dynamics.sharkcamera.posteffect.NoneEffect;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -48,6 +53,12 @@ public class CamActivity extends Activity {
     private SurfaceTexture mSurfaceTexture;
     private CamPreviewRenderer mCamPreviewRenderer;
 
+    // prev-effect
+    private RecyclerView mPrevEffectRV;
+    private EffectAdapter mPrevEffectAdapter;
+    private List<EffectItem> mPrevEffects = new ArrayList<>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +71,6 @@ public class CamActivity extends Activity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, kPermCode);
         } else {
             initCamera();
-
         }
     }
 
@@ -80,17 +90,31 @@ public class CamActivity extends Activity {
         openCamera();
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        closeCamera();
+    }
+
     private void setupViews() {
-        mGLSurfaceView = new GLSurfaceView(this);
+        setContentView(R.layout.activity_preview);
+        mGLSurfaceView = findViewById(R.id.id_cam_preview);
         mGLSurfaceView.setEGLContextClientVersion(3);
         mCamPreviewRenderer = new CamPreviewRenderer(this);
-        mCamPreviewRenderer.addEffect(new TestEffect());
+        mCamPreviewRenderer.addEffect(new AnimEffect2());
 
-        mCamPreviewRenderer.setPostEffect(new GrayEffect());
-        mCamPreviewRenderer.setPostEffect(new BlurEffect());
+//        mCamPreviewRenderer.setPostEffect(new BlurEffect());
+//        mCamPreviewRenderer.setPostEffect(new GrayEffect());
+        mCamPreviewRenderer.setPostEffect(new NoneEffect());
 
         mGLSurfaceView.setRenderer(mCamPreviewRenderer);
-        setContentView(mGLSurfaceView);
+
+        // prev effect
+        mPrevEffectRV = findViewById(R.id.id_prev_effect);
+        mPrevEffectRV.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
+        mPrevEffects.addAll(EffectLoader.loadPrevEffects());
+        mPrevEffectAdapter = new EffectAdapter(this, mPrevEffects);
+        mPrevEffectRV.setAdapter(mPrevEffectAdapter);
     }
 
     private final CameraCaptureSession.StateCallback nSessionsStateCallback = new CameraCaptureSession.StateCallback() {
@@ -171,6 +195,10 @@ public class CamActivity extends Activity {
             e.printStackTrace();
             Log.e(TAG, "openCamera fail : " + e.getMessage());
         }
+    }
+
+    private void closeCamera() {
+        mCameraDevice.close();
     }
 
     public List<Size> getCameraOutputSizes(int cameraId, Class<?> clz) {

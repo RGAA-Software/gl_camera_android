@@ -15,6 +15,8 @@ import com.shark.dynamics.graphics.shader.Shader;
 import com.shark.dynamics.sharkcamera.effect.IEffect;
 import com.shark.dynamics.sharkcamera.posteffect.IPostEffect;
 
+import org.joml.Vector2f;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,7 +67,9 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
 
         mPostSprite = new Sprite(
                 new Texture(mEffectFrameBuffer.getFrameBufferTexId(), width, height), Sprite.SpriteType.kRect);
-        mPostSprite.scaleTo(0.5f);
+        //mPostSprite.scaleTo(0.5f);
+        Vector2f sc = Director.getInstance().getDevice().getScreenUsableSize();
+        //mPostSprite.translateTo(sc.x/4, sc.y/4, 0);
 
         initEffects();
         initPostEffects();
