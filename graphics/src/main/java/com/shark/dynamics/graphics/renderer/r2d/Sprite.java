@@ -1,6 +1,8 @@
 package com.shark.dynamics.graphics.renderer.r2d;
 
 import android.content.res.Resources;
+import android.opengl.GLES20;
+import android.opengl.GLES32;
 
 import com.shark.dynamics.graphics.renderer.DefaultShader;
 import com.shark.dynamics.graphics.Director;
@@ -241,6 +243,9 @@ public class Sprite extends I2DRenderer {
     public void render(float delta) {
         super.render(delta);
 
+        GLES32.glEnable(GLES20.GL_BLEND);
+        GLES32.glBlendFunc(GLES32.GL_SRC_ALPHA, GLES32.GL_ONE_MINUS_SRC_ALPHA);
+
         if (mTexture == null) {
             return;
         }
@@ -255,6 +260,7 @@ public class Sprite extends I2DRenderer {
 
             glDrawArrays(GL_TRIANGLE_FAN, 0, 52);
         }
+        GLES32.glDisable(GLES20.GL_BLEND);
         glBindVertexArray(0);
     }
 

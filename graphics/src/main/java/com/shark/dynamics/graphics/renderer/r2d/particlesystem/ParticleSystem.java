@@ -1,5 +1,8 @@
 package com.shark.dynamics.graphics.renderer.r2d.particlesystem;
 
+import android.opengl.GLES20;
+import android.opengl.GLES30;
+
 import com.shark.dynamics.graphics.Director;
 import com.shark.dynamics.graphics.renderer.r2d.I2DRenderer;
 import com.shark.dynamics.graphics.renderer.texture.Texture;
@@ -201,6 +204,7 @@ public class ParticleSystem extends I2DRenderer {
             glBlendFunc(GL_SRC_ALPHA, GL_ONE);
         } else {
             glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+//            GLES30.glBlendFunc(GLES30.GL_SRC_ALPHA, GLES30.GL_ONE_MINUS_SRC_ALPHA);
         }
 
         if (mTintColor != null) {
@@ -346,5 +350,9 @@ public class ParticleSystem extends I2DRenderer {
             return InternalParticleGenerator.genCenterParticle(mXPos, mYPos, mRadius);
         }
         return InternalParticleGenerator.genSnowParticle(mBaseScale);
+    }
+
+    public void dispose() {
+        mTexture.dispose();
     }
 }

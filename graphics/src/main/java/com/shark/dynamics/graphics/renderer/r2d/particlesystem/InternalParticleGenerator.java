@@ -12,13 +12,13 @@ public class InternalParticleGenerator extends ParticleGenerator {
         int particleRegion = 200;
 
         particle.x = sRandom.nextFloat()*sc.x*4.0f/3.0f;
-        particle.y = sRandom.nextFloat()*particleRegion + sc.y - 50;
+        particle.y = (0.5f - sRandom.nextFloat())*particleRegion + sc.y - 50;
         particle.duration = sRandom.nextInt(36) * 1000;
         long minDuration = 15*1000;
         if (particle.duration < minDuration) {
             particle.duration = minDuration;
         }
-        particle.yVelocity = -sRandom.nextFloat() * 5;
+        particle.yVelocity = -sRandom.nextFloat() * 15;
         particle.xVelocity = -sRandom.nextFloat() * 1.2f;
         particle.xScale = sRandom.nextFloat();
         if (particle.xScale < 0.55f) {

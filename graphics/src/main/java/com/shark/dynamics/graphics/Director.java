@@ -73,9 +73,11 @@ public class Director {
         mDevice = new Device(context);
         mFontLoader = new FontLoader(context);
 
-        mDefaultFont = Director.getInstance().getFontLoader().loadFonts("fonts", "yahei");
-
         mInit = true;
+    }
+
+    public void loadDefaultFont() {
+        mDefaultFont = Director.getInstance().getFontLoader().loadFonts("fonts", "yahei");
     }
 
     public void resetOrtho(int width, int height) {

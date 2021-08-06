@@ -2,6 +2,7 @@ package com.shark.dynamics.graphics.renderer.framebuffer;
 
 import android.util.Log;
 
+import com.shark.dynamics.graphics.renderer.ErrorCheck;
 import com.shark.dynamics.graphics.util.GLUtil;
 
 import java.nio.ByteBuffer;
@@ -120,6 +121,8 @@ public class FrameBuffer {
         glDrawBuffers(2, attachments, 0);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+        ErrorCheck.checkError();
     }
 
     public void begin() {

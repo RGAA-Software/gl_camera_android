@@ -1,30 +1,23 @@
 package com.shark.dynamics.sharkcamera.effect;
 
-import com.shark.dynamics.graphics.renderer.r2d.Sprite;
 import com.shark.dynamics.graphics.renderer.r2d.anim.FrameAnimation;
-import com.shark.dynamics.graphics.renderer.r2d.bezier.BezierPointGenerator;
 
-import org.joml.Vector2f;
-import org.joml.Vector3f;
-
-import java.util.List;
-
-public class AnimEffect2 extends IEffect {
+public class AnimEffect4 extends IEffect {
 
     private FrameAnimation mFrameAnim;
 
-    public AnimEffect2() {
+    public AnimEffect4() {
 
     }
 
     @Override
     public void init() {
 
-        mFrameAnim = new FrameAnimation("anim/yinghua_1_anim.png", 6, 4);
+        mFrameAnim = new FrameAnimation("anim/changjinglu_1_anim.png", 2, 1);
         mFrameAnim.setPerFrameTime(60);
         mFrameAnim.setRunTime(10000);
-        mFrameAnim.scaleTo(2.5f);
-        mFrameAnim.translateTo(200, 1300, 0);
+        mFrameAnim.scaleTo(1.5f);
+        mFrameAnim.translateTo(300, 900, 0);
         mFrameAnim.setMovable(false);
 
         mInit = true;

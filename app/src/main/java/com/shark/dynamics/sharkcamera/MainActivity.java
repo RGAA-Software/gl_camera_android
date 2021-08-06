@@ -2,8 +2,11 @@ package com.shark.dynamics.sharkcamera;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -31,6 +34,10 @@ public class MainActivity extends AppCompatActivity {
         binding.idStartPreview.setOnClickListener(v -> {
             startActivity(new Intent(this, CamActivity.class));
         });
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 101);
+        }
 
     }
 

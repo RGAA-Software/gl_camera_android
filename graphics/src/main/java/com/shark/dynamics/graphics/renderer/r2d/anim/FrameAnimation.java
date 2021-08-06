@@ -182,13 +182,14 @@ public class FrameAnimation extends I2DRenderer {
             }
         }
 
-        int pointIdx = (int)(mRunLapses * 1.0f/mRunTime * (mPath.size()-1));
-        if (mRunForward) {
-            mCurrentPoint = mPath.get(pointIdx);
-        } else {
-            mCurrentPoint = mPath.get(mPath.size()-1-pointIdx);
+        if (mPath != null) {
+            int pointIdx = (int) (mRunLapses * 1.0f / mRunTime * (mPath.size() - 1));
+            if (mRunForward) {
+                mCurrentPoint = mPath.get(pointIdx);
+            } else {
+                mCurrentPoint = mPath.get(mPath.size() - 1 - pointIdx);
+            }
         }
-
         mShader.setUniformVec3("tintColor", mTintColor.x, mTintColor.y, mTintColor.z);
 
         if (mMovable) {
@@ -230,5 +231,11 @@ public class FrameAnimation extends I2DRenderer {
 
     public void setMovable(boolean move) {
         mMovable = move;
+    }
+
+    public void dispose() {
+        for (Texture t : mTextures) {
+            t.dispose();
+        }
     }
 }
