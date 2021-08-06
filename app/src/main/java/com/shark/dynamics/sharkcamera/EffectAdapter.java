@@ -1,6 +1,7 @@
 package com.shark.dynamics.sharkcamera;
 
 import android.content.Context;
+import android.graphics.Color;
 
 import com.shark.dynamics.basic.rv.RViewAdapter;
 import com.shark.dynamics.basic.rv.RViewHolder;
@@ -21,5 +22,12 @@ public class EffectAdapter extends RViewAdapter<EffectItem> {
     public void bindDataToView(RViewHolder holder, int position) {
         EffectItem item = mData.get(position);
         holder.setText(R.id.id_effect_name, item.name);
+
+        if (item.selected) {
+            holder.itemView.setBackgroundColor(Color.GRAY);
+        } else {
+            holder.itemView.setBackgroundColor(Color.LTGRAY);
+        }
+
     }
 }

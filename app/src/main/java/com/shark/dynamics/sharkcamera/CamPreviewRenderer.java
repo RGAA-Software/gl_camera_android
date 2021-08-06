@@ -13,6 +13,7 @@ import com.shark.dynamics.graphics.renderer.ErrorCheck;
 import com.shark.dynamics.graphics.renderer.framebuffer.FrameBuffer;
 import com.shark.dynamics.graphics.renderer.r2d.Sprite;
 import com.shark.dynamics.graphics.renderer.texture.Texture;
+import com.shark.dynamics.graphics.shader.Shader;
 import com.shark.dynamics.sharkcamera.effect.IEffect;
 import com.shark.dynamics.sharkcamera.posteffect.IPostEffect;
 
@@ -113,6 +114,10 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
 
         if (mPostEffect != null) {
+            Shader shader = mPostEffect.getShader();
+            if (shader == null || !mPostEffect.isInit()) {
+                mPostEffect.init();
+            }
             mPostSprite.updateShader(mPostEffect.getShader());
         }
         mPostSprite.render(delta);

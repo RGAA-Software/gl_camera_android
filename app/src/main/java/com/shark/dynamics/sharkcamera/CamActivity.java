@@ -60,6 +60,10 @@ public class CamActivity extends Activity {
     private EffectAdapter mPrevEffectAdapter;
     private List<EffectItem> mPrevEffects = new ArrayList<>();
 
+    // post-effect
+    private RecyclerView mPostEffectRV;
+    private EffectAdapter mPostEffectAdapter;
+    private List<EffectItem> mPostEffects = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,6 +119,7 @@ public class CamActivity extends Activity {
 
         mGLSurfaceView.setRenderer(mCamPreviewRenderer);
         mGLSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+
         // prev effect
         mPrevEffectRV = findViewById(R.id.id_prev_effect);
         mPrevEffectRV.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
@@ -125,9 +130,34 @@ public class CamActivity extends Activity {
             @Override
             public void onItemClick(View rootView, int position) {
                 EffectItem item = mPrevEffects.get(position);
+                for (EffectItem it : mPrevEffects) {
+                    it.selected = false;
+                }
+                item.selected = true;
+                mPrevEffectAdapter.notifyDataSetChanged();
+
                 mCamPreviewRenderer.clearEffects();
                 mCamPreviewRenderer.addEffect(mLogoEffect);
                 mCamPreviewRenderer.addEffect(item.e);
+            }
+        });
+
+        mPostEffectRV = findViewById(R.id.id_post_effect);
+        mPostEffectRV.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
+        mPostEffects.addAll(EffectLoader.loadPostEffects());
+        mPostEffectAdapter = new EffectAdapter(this, mPostEffects);
+        mPostEffectRV.setAdapter(mPostEffectAdapter);
+        mPostEffectAdapter.setOnItemClickListener(new RView.OnItemClickListener() {
+            @Override
+            public void onItemClick(View rootView, int position) {
+                EffectItem item = mPostEffects.get(position);
+                for (EffectItem it : mPostEffects) {
+                    it.selected = false;
+                }
+                item.selected = true;
+                mPostEffectAdapter.notifyDataSetChanged();
+
+                mCamPreviewRenderer.setPostEffect(item.pe);
             }
         });
 

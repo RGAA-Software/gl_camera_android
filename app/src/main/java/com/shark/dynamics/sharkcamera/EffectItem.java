@@ -18,5 +18,6 @@ public class EffectItem {
     public String name;
     public IEffect e;
     public IPostEffect pe;
+    public boolean selected = false;
 
 }
