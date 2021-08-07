@@ -1,7 +1,5 @@
 package com.shark.dynamics.graphics.renderer.r3d.model;
 
-import com.shark.dynamics.graphics.renderer.texture.Texture;
-
 import org.joml.Vector3f;
 
 import java.util.ArrayList;

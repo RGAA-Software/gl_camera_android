@@ -6,11 +6,13 @@ import com.shark.dynamics.sharkcamera.effect.AnimEffect2;
 import com.shark.dynamics.sharkcamera.effect.AnimEffect3;
 import com.shark.dynamics.sharkcamera.effect.AnimEffect4;
 import com.shark.dynamics.sharkcamera.effect.FlowerEffect;
+import com.shark.dynamics.sharkcamera.effect.ModelDeerEffect;
 import com.shark.dynamics.sharkcamera.effect.SnowEffect;
 import com.shark.dynamics.sharkcamera.posteffect.BlurEffect;
 import com.shark.dynamics.sharkcamera.posteffect.CircleEffect;
 import com.shark.dynamics.sharkcamera.posteffect.ColorRegionEffect;
 import com.shark.dynamics.sharkcamera.posteffect.GrayEffect;
+import com.shark.dynamics.sharkcamera.posteffect.InverseEffect;
 import com.shark.dynamics.sharkcamera.posteffect.NoneEffect;
 import com.shark.dynamics.sharkcamera.posteffect.PixelEffect;
 
@@ -27,6 +29,7 @@ public class EffectLoader {
         effects.add(new EffectItem("Anim4", new AnimEffect4()));
         effects.add(new EffectItem("Snow", new SnowEffect()));
         effects.add(new EffectItem("Flower", new FlowerEffect()));
+        effects.add(new EffectItem("Deer", new ModelDeerEffect()));
         return effects;
     }
 
@@ -34,6 +37,7 @@ public class EffectLoader {
         List<EffectItem> pes = new ArrayList<>();
         pes.add(new EffectItem("None", new NoneEffect()));
         pes.add(new EffectItem("Gray", new GrayEffect()));
+        pes.add(new EffectItem("Inverse", new InverseEffect()));
         pes.add(new EffectItem("Blur", new BlurEffect()));
         pes.add(new EffectItem("Pixel", new PixelEffect()));
         pes.add(new EffectItem("C-Region", new ColorRegionEffect()));

@@ -4,8 +4,6 @@ import com.shark.dynamics.graphics.Director;
 import com.shark.dynamics.graphics.renderer.r3d.I3DRenderer;
 import com.shark.dynamics.graphics.shader.Shader;
 
-import org.joml.Vector3f;
-
 import java.util.List;
 
 import static android.opengl.GLES30.glBindVertexArray;

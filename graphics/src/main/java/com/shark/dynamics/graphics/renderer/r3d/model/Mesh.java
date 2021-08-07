@@ -1,8 +1,6 @@
 package com.shark.dynamics.graphics.renderer.r3d.model;
 
 
-import com.shark.dynamics.graphics.renderer.r3d.I3DRenderer;
-import com.shark.dynamics.graphics.renderer.texture.Texture;
 import com.shark.dynamics.graphics.shader.Shader;
 import com.shark.dynamics.graphics.util.BufferUtil;
 import com.shark.dynamics.graphics.util.GLUtil;

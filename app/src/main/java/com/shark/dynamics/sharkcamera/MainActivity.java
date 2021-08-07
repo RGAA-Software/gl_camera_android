@@ -10,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 
+import com.shark.dynamics.basic.thread.Worker;
 import com.shark.dynamics.sharkcamera.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 101);
         }
 
+        Worker.getInstance().init();
+        Prepare.getInstance().prepare(this);
     }
 
 }
