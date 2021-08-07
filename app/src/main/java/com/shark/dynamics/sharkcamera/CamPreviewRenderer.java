@@ -116,11 +116,15 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
         if (mPostEffect != null) {
             Shader shader = mPostEffect.getShader();
             if (shader == null || !mPostEffect.isInit()) {
-                mPostEffect.init();
+                mPostEffect.init(mEffectFrameBuffer);
             }
-            mPostSprite.updateShader(mPostEffect.getShader());
+            if (shader != null) {
+                mPostSprite.updateShader(shader);
+            }
         }
         mPostSprite.render(delta);
+
+        renderPostEffects(delta);
 
         mLastRenderTime = currentTime;
 
@@ -178,7 +182,7 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
     private void initPostEffectsIfNeeded() {
         synchronized (CamPreviewRenderer.class) {
             if (mPostEffect != null && !mPostEffect.isInit()) {
-                mPostEffect.init();
+                mPostEffect.init(mEffectFrameBuffer);
             }
         }
     }
@@ -189,6 +193,11 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
         }
     }
 
+    public void renderPostEffects(float delta) {
+        if (mPostEffect != null) {
+            mPostEffect.render(delta);
+        }
+    }
 
     //
     public void setCameraHelper(CameraHelper ch) {

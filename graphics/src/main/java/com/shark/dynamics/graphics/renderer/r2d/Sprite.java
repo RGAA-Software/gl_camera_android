@@ -33,12 +33,16 @@ import static android.opengl.GLES20.glDrawArrays;
 import static android.opengl.GLES20.glDrawElements;
 import static android.opengl.GLES20.glEnableVertexAttribArray;
 import static android.opengl.GLES20.glUniform1i;
+import static android.opengl.GLES20.glUniformMatrix4fv;
 import static android.opengl.GLES20.glVertexAttribPointer;
 import static android.opengl.GLES30.glBindVertexArray;
 
 public class Sprite extends I2DRenderer {
 
     private Texture mTexture;
+
+    private boolean mIsCustomModelMatrix;
+    private boolean mIsRotateCenter;
 
     public enum SpriteType {
         kRect,
@@ -239,6 +243,16 @@ public class Sprite extends I2DRenderer {
         return mTexture;
     }
 
+    public void enableCenterRotating() {
+        mIsCustomModelMatrix = true;
+        mIsRotateCenter = true;
+    }
+
+    @Override
+    public boolean isCustomModelMatrix() {
+        return mIsCustomModelMatrix;
+    }
+
     @Override
     public void render(float delta) {
         super.render(delta);
@@ -252,6 +266,23 @@ public class Sprite extends I2DRenderer {
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, mTexture.getTextureId());
         glUniform1i(mShader.getUniformLocation("image"), 0);
+
+        if (mIsRotateCenter) {
+            mModelMatrix.identity();
+            mModelMatrix.translate(mTranslate);
+
+            mModelMatrix.translate(mWidth / 2, mHeight / 2, 0);
+            mModelMatrix.rotate((float) Math.toRadians(mRotateDegree), 0, 0, 1);
+            mModelMatrix.scale(mScale);
+            mModelMatrix.translate(-mWidth / 2, -mHeight / 2, 0);
+
+
+
+            glUniformMatrix4fv(mShader.getUniformLocation("model"),
+                    1,
+                    false,
+                    getModelBuffer());
+        }
 
         if (mType == SpriteType.kRect) {
             glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);

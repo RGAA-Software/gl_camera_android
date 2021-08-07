@@ -5,12 +5,14 @@ import com.shark.dynamics.sharkcamera.effect.AnimEffect1;
 import com.shark.dynamics.sharkcamera.effect.AnimEffect2;
 import com.shark.dynamics.sharkcamera.effect.AnimEffect3;
 import com.shark.dynamics.sharkcamera.effect.AnimEffect4;
+import com.shark.dynamics.sharkcamera.posteffect.ExpandEffect;
 import com.shark.dynamics.sharkcamera.effect.FlowerEffect;
 import com.shark.dynamics.sharkcamera.effect.ModelDeerEffect;
 import com.shark.dynamics.sharkcamera.effect.SnowEffect;
 import com.shark.dynamics.sharkcamera.posteffect.BlurEffect;
 import com.shark.dynamics.sharkcamera.posteffect.CircleEffect;
 import com.shark.dynamics.sharkcamera.posteffect.ColorRegionEffect;
+import com.shark.dynamics.sharkcamera.posteffect.FourMirrorEffect;
 import com.shark.dynamics.sharkcamera.posteffect.GrayEffect;
 import com.shark.dynamics.sharkcamera.posteffect.InverseEffect;
 import com.shark.dynamics.sharkcamera.posteffect.NoneEffect;
@@ -42,6 +44,8 @@ public class EffectLoader {
         pes.add(new EffectItem("Pixel", new PixelEffect()));
         pes.add(new EffectItem("C-Region", new ColorRegionEffect()));
         pes.add(new EffectItem("Circle", new CircleEffect()));
+        pes.add(new EffectItem("4-Mirror", new FourMirrorEffect()));
+        pes.add(new EffectItem("Expand", new ExpandEffect()));
         return pes;
     }
 
