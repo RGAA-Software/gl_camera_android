@@ -120,10 +120,11 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
             }
             if (shader != null) {
                 mPostSprite.updateShader(shader);
+                updatePostParams(delta);
             }
         }
-        mPostSprite.render(delta);
 
+        mPostSprite.render(delta);
         renderPostEffects(delta);
 
         mLastRenderTime = currentTime;
@@ -196,6 +197,12 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
     public void renderPostEffects(float delta) {
         if (mPostEffect != null) {
             mPostEffect.render(delta);
+        }
+    }
+
+    public void updatePostParams(float delta) {
+        if (mPostEffect != null) {
+            mPostEffect.updateParams(delta);
         }
     }
 

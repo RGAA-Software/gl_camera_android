@@ -9,6 +9,7 @@ import com.shark.dynamics.graphics.Director;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
+import org.lwjgl.opengles.GLES;
 
 import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
@@ -44,6 +45,14 @@ public class Shader {
 
     public void setUniformFloat(String name, float value) {
         GLES32.glUniform1f(getUniformLocation(name), value);
+    }
+
+    public void setUniformIntArray(String name, int[] array) {
+        GLES32.glUniform1iv(getUniformLocation(name), array.length, array, 0);
+    }
+
+    public void setUniformFloatArray(String name, float[] array) {
+        GLES32.glUniform1fv(getUniformLocation(name), array.length, array, 0);
     }
 
     public void setUniformInt(String name, int value) {

@@ -30,4 +30,10 @@ public abstract class IPostEffect {
 
     }
 
+    public void updateParams(float delta) {
+        if (mShader != null) {
+            mShader.use();
+        }
+    }
+
 }

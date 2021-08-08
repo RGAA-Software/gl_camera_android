@@ -5,6 +5,7 @@ import com.shark.dynamics.sharkcamera.effect.AnimEffect1;
 import com.shark.dynamics.sharkcamera.effect.AnimEffect2;
 import com.shark.dynamics.sharkcamera.effect.AnimEffect3;
 import com.shark.dynamics.sharkcamera.effect.AnimEffect4;
+import com.shark.dynamics.sharkcamera.posteffect.CyberpunkEffect1;
 import com.shark.dynamics.sharkcamera.posteffect.ExpandEffect;
 import com.shark.dynamics.sharkcamera.effect.FlowerEffect;
 import com.shark.dynamics.sharkcamera.effect.ModelDeerEffect;
@@ -17,6 +18,8 @@ import com.shark.dynamics.sharkcamera.posteffect.GrayEffect;
 import com.shark.dynamics.sharkcamera.posteffect.InverseEffect;
 import com.shark.dynamics.sharkcamera.posteffect.NoneEffect;
 import com.shark.dynamics.sharkcamera.posteffect.PixelEffect;
+import com.shark.dynamics.sharkcamera.posteffect.ShakeEffect;
+import com.shark.dynamics.sharkcamera.posteffect.ShakeExpandEffect;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +49,9 @@ public class EffectLoader {
         pes.add(new EffectItem("Circle", new CircleEffect()));
         pes.add(new EffectItem("4-Mirror", new FourMirrorEffect()));
         pes.add(new EffectItem("Expand", new ExpandEffect()));
+        pes.add(new EffectItem("Shake", new ShakeEffect()));
+        pes.add(new EffectItem("ShakeExpand", new ShakeExpandEffect()));
+        pes.add(new EffectItem("cbpk1", new CyberpunkEffect1()));
         return pes;
     }
 
