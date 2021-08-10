@@ -66,9 +66,7 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
         Director.getInstance().init(mContext, width, height);
 
         GLES30.glBindVertexArray(0);
-        if (mCamSprite == null) {
-            mCamSprite = new CamSprite(mSurfaceTextureId);
-        }
+        mCamSprite = new CamSprite(mSurfaceTextureId, width, height);
 
         mEffectFrameBuffer = new FrameBuffer();
         mEffectFrameBuffer.init(width, height);
@@ -84,19 +82,20 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        GLES32.glBindVertexArray(0);
 
         initEffectsIfNeeded();
         initPostEffectsIfNeeded();
-
-        mSurfaceTexture.updateTexImage();
-        mSurfaceTexture.getTransformMatrix(mCamTransformMatrix);
-        mCamSprite.updateTransformMatrix(mCamTransformMatrix);
 
         mEffectFrameBuffer.begin();
 
         GLES30.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
         GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
+
+        GLES30.glBindVertexArray(0);
+        mSurfaceTexture.updateTexImage();
+        mSurfaceTexture.getTransformMatrix(mCamTransformMatrix);
+        mCamSprite.updateTransformMatrix(mCamTransformMatrix);
+
 
         if (mLastRenderTime == 0) {
             mLastRenderTime = System.currentTimeMillis();
