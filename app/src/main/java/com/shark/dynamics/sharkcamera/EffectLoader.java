@@ -6,6 +6,7 @@ import com.shark.dynamics.sharkcamera.effect.AnimEffect2;
 import com.shark.dynamics.sharkcamera.effect.AnimEffect3;
 import com.shark.dynamics.sharkcamera.effect.AnimEffect4;
 import com.shark.dynamics.sharkcamera.posteffect.CyberpunkEffect1;
+import com.shark.dynamics.sharkcamera.posteffect.CyberpunkEffect2;
 import com.shark.dynamics.sharkcamera.posteffect.ExpandEffect;
 import com.shark.dynamics.sharkcamera.effect.FlowerEffect;
 import com.shark.dynamics.sharkcamera.effect.ModelDeerEffect;
@@ -52,6 +53,7 @@ public class EffectLoader {
         pes.add(new EffectItem("Shake", new ShakeEffect()));
         pes.add(new EffectItem("ShakeExpand", new ShakeExpandEffect()));
         pes.add(new EffectItem("cbpk1", new CyberpunkEffect1()));
+        pes.add(new EffectItem("cbpk2", new CyberpunkEffect2()));
         return pes;
     }
 

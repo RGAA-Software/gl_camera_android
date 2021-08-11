@@ -5,7 +5,6 @@ import android.graphics.SurfaceTexture;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.GLES30;
-import android.opengl.GLES31Ext;
 import android.opengl.GLES32;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
@@ -29,6 +28,9 @@ import java.util.List;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
+
+import static android.opengl.GLES30.GL_COPY_READ_BUFFER;
+import static android.opengl.GLES30.GL_COPY_WRITE_BUFFER;
 
 
 public class CamPreviewRenderer implements GLSurfaceView.Renderer {
@@ -55,6 +57,8 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
 
     private int mPrevWidth;
     private int mPrevHeight;
+
+    private boolean mOnlyCamPrev = false;
 
     public CamPreviewRenderer(Context context) {
         mContext = context;
@@ -92,22 +96,59 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
     @Override
     public void onDrawFrame(GL10 gl) {
 
-        initEffectsIfNeeded();
-        initPostEffectsIfNeeded();
-        //genTextureIfNeeded();
+        if (mOnlyCamPrev) {
+            GLES30.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+            GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
 
-        mEffectFrameBuffer.begin();
+            renderCamPrevOnly();
 
-        GLES30.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
-        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
+        } else {
 
-        if (mLastRenderTime == 0) {
-            mLastRenderTime = System.currentTimeMillis();
+            initEffectsIfNeeded();
+            initPostEffectsIfNeeded();
+            //genTextureIfNeeded();
+
+            mEffectFrameBuffer.begin();
+
+            GLES30.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+            GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
+
+            if (mLastRenderTime == 0) {
+                mLastRenderTime = System.currentTimeMillis();
+            }
+            long currentTime = System.currentTimeMillis();
+            float delta = currentTime - mLastRenderTime;
+            delta = delta * 1.0f / 1000;
+
+            renderCamPrevOnly();
+
+            renderEffects(delta);
+            mEffectFrameBuffer.end();
+
+            GLES30.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
+            GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
+
+            synchronized (CamPreviewRenderer.class) {
+                if (mPostEffect != null) {
+                    Shader shader = mPostEffect.getShader();
+                    if (shader == null || !mPostEffect.isInit()) {
+                        mPostEffect.init(mEffectFrameBuffer);
+                    }
+                    if (shader != null) {
+                        mPostSprite.updateShader(shader);
+                        updatePostParams(delta);
+                    }
+                }
+            }
+
+            mPostSprite.render(delta);
+            renderPostEffects(delta);
+
+            mLastRenderTime = currentTime;
         }
-        long currentTime = System.currentTimeMillis();
-        float delta = currentTime - mLastRenderTime;
-        delta = delta*1.0f/1000;
+    }
 
+    private void renderCamPrevOnly() {
         //updateYUVDataIfNeeded();
         GLES32.glBindVertexArray(0);
         mSurfaceTexture.updateTexImage();
@@ -115,31 +156,6 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
         mCamSprite.updateTransformMatrix(mCamTransformMatrix);
 
         mCamSprite.render();
-        renderEffects(delta);
-        mEffectFrameBuffer.end();
-
-        GLES30.glClearColor(0.5f, 0.5f, 0.5f, 0.5f);
-        GLES30.glClear(GLES30.GL_COLOR_BUFFER_BIT);
-
-        synchronized (CamPreviewRenderer.class) {
-            if (mPostEffect != null) {
-                Shader shader = mPostEffect.getShader();
-                if (shader == null || !mPostEffect.isInit()) {
-                    mPostEffect.init(mEffectFrameBuffer);
-                }
-                if (shader != null) {
-                    mPostSprite.updateShader(shader);
-                    updatePostParams(delta);
-                }
-            }
-        }
-
-        mPostSprite.render(delta);
-        renderPostEffects(delta);
-
-        mLastRenderTime = currentTime;
-
-        GLES32.glBindVertexArray(0);
     }
 
     public SurfaceTexture getSurfaceTexture() {
