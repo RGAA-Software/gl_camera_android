@@ -17,6 +17,8 @@ import com.shark.dynamics.sharkcamera.posteffect.ColorRegionEffect;
 import com.shark.dynamics.sharkcamera.posteffect.FourMirrorEffect;
 import com.shark.dynamics.sharkcamera.posteffect.GrayEffect;
 import com.shark.dynamics.sharkcamera.posteffect.InverseEffect;
+import com.shark.dynamics.sharkcamera.posteffect.LUTEffect1;
+import com.shark.dynamics.sharkcamera.posteffect.LUTEffect2;
 import com.shark.dynamics.sharkcamera.posteffect.NoneEffect;
 import com.shark.dynamics.sharkcamera.posteffect.PixelEffect;
 import com.shark.dynamics.sharkcamera.posteffect.ShakeEffect;
@@ -54,6 +56,8 @@ public class EffectLoader {
         pes.add(new EffectItem("ShakeExpand", new ShakeExpandEffect()));
         pes.add(new EffectItem("cbpk1", new CyberpunkEffect1()));
         pes.add(new EffectItem("cbpk2", new CyberpunkEffect2()));
+        pes.add(new EffectItem("LUT1", new LUTEffect1()));
+        pes.add(new EffectItem("LUT2", new LUTEffect2()));
         return pes;
     }
 
