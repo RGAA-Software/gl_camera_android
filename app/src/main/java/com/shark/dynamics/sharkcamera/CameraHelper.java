@@ -1,155 +1,56 @@
 package com.shark.dynamics.sharkcamera;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
-import android.graphics.SurfaceTexture;
-import android.hardware.camera2.CameraAccessException;
-import android.hardware.camera2.CameraCaptureSession;
-import android.hardware.camera2.CameraCharacteristics;
-import android.hardware.camera2.CameraDevice;
-import android.hardware.camera2.CameraManager;
-import android.hardware.camera2.CaptureRequest;
-import android.hardware.camera2.params.StreamConfigurationMap;
-import android.opengl.GLSurfaceView;
-import android.os.Handler;
+import android.graphics.ImageFormat;
+import android.hardware.Camera;
 import android.util.Log;
 import android.util.Size;
-import android.view.Surface;
+import android.view.SurfaceHolder;
 
-import java.util.Arrays;
-import java.util.Collections;
+import java.io.IOException;
 import java.util.List;
 
 public class CameraHelper {
 
     private static final String TAG = "Camera";
 
-    private static CameraManager mCameraManager;
-    private int mCameraId = 1;
-    private List<Size> mOutputSizes;
-    private Size mPhotoSize;
-    private CameraDevice mCameraDevice;
-    private CameraCaptureSession mCaptureSession;
-    private CaptureRequest.Builder mPreviewRequestBuilder;
-    private CaptureRequest mPreviewRequest;
-    private Surface mSurface;
-    private SurfaceTexture mSurfaceTexture;
+    private Camera mCamera;
 
-    private GLSurfaceView mGLSurfaceView;
-    private CamPreviewRenderer mCamPreviewRenderer;
+    public CameraHelper() {
 
-    private Context mContext;
-
-    public CameraHelper(Context context) {
-        mContext = context;
     }
 
-    public void initCamera() {
-        mCameraManager = (CameraManager)mContext.getSystemService(Context.CAMERA_SERVICE);
-        mOutputSizes = getCameraOutputSizes(mCameraId, SurfaceTexture.class);
-        mPhotoSize = mOutputSizes.get(7);
-    }
+    public void openCamera(SurfaceHolder holder) {
+        mCamera = Camera.open(Camera.CameraInfo.CAMERA_FACING_FRONT);
+        Camera.Parameters cp = mCamera.getParameters();
+        List<Camera.Size> sizes = cp.getSupportedPreviewSizes();
+        Camera.Size size = sizes.get(sizes.size()/2);
+        cp.setPreviewSize(size.width, size.height);
+        cp.setPreviewFormat(ImageFormat.NV21);
+        mCamera.setParameters(cp);
 
-    @SuppressLint("MissingPermission")
-    public void openCamera() {
+        int bufSize = size.width*size.height*3/2;
+        mCamera.addCallbackBuffer(new byte[bufSize]);
+        mCamera.setPreviewCallback(new Camera.PreviewCallback() {
+            @Override
+            public void onPreviewFrame(byte[] data, Camera camera) {
+                Log.i(TAG, "camera buffer size : " + data.length);
+            }
+        });
         try {
-            mCameraManager.openCamera(String.valueOf(mCameraId), mCameraStateCallback, null);
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e(TAG, "openCamera fail : " + e.getMessage());
-        }
-    }
-
-    public void closeCamera() {
-        mCameraDevice.close();
-    }
-
-    public void setGLSurfaceView(GLSurfaceView sv) {
-        mGLSurfaceView = sv;
-    }
-
-    public void setCamPreviewRenderer(CamPreviewRenderer renderer) {
-        mCamPreviewRenderer = renderer;
-    }
-
-    public List<Size> getCameraOutputSizes(int cameraId, Class<?> clz) {
-        try {
-            CameraCharacteristics characteristics = mCameraManager.getCameraCharacteristics(String.valueOf(cameraId));
-            StreamConfigurationMap configs = characteristics.get(CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-            List<Size> sizes = Arrays.asList(configs.getOutputSizes(clz));
-            Collections.sort(sizes, (o1, o2) -> o1.getWidth() * o1.getHeight() - o2.getWidth() * o2.getHeight());
-            Collections.reverse(sizes);
-            return sizes;
-        } catch (CameraAccessException e) {
+            mCamera.setPreviewDisplay(holder);
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        return null;
+
+        mCamera.startPreview();
     }
 
-    private final CameraCaptureSession.StateCallback mSessionsStateCallback = new CameraCaptureSession.StateCallback() {
-        @Override
-        public void onConfigured(CameraCaptureSession session) {
-            if (null == mCameraDevice) {
-                return;
-            }
-
-            mCaptureSession = session;
-            try {
-                mCaptureSession.setRepeatingRequest(mPreviewRequest,
-                        null,
-                        null);
-            } catch (CameraAccessException e) {
-                e.printStackTrace();
-            }
+    public void releaseCamera() {
+        if (mCamera != null) {
+            mCamera.stopPreview();
+            mCamera.release();
         }
+    }
 
-        @Override
-        public void onConfigureFailed(CameraCaptureSession session) {
-        }
-    };
-
-
-    private final CameraDevice.StateCallback mCameraStateCallback = new CameraDevice.StateCallback() {
-        @Override
-        public void onOpened(CameraDevice camera) {
-            mSurfaceTexture = mCamPreviewRenderer.getSurfaceTexture();
-            if (mSurfaceTexture == null) {
-                return;
-            }
-
-            Log.i(TAG, "size : " + mPhotoSize.getWidth() + " " + mPhotoSize.getHeight());
-            mSurfaceTexture.setDefaultBufferSize(mPhotoSize.getWidth(), mPhotoSize.getHeight());
-            mSurfaceTexture.setOnFrameAvailableListener(new SurfaceTexture.OnFrameAvailableListener() {
-                @Override
-                public void onFrameAvailable(final SurfaceTexture surfaceTexture) {
-                    mGLSurfaceView.requestRender();
-                }
-            });
-            mSurface = new Surface(mSurfaceTexture);
-
-            try {
-                mCameraDevice = camera;
-                mPreviewRequestBuilder = mCameraDevice.createCaptureRequest(CameraDevice.TEMPLATE_PREVIEW);
-                mPreviewRequestBuilder.addTarget(mSurface);
-                mPreviewRequest = mPreviewRequestBuilder.build();
-
-                mCameraDevice.createCaptureSession(Arrays.asList(mSurface), mSessionsStateCallback, null);
-            } catch (CameraAccessException e) {
-                e.printStackTrace();
-                Log.e(TAG, "Failed : " + e.getMessage());
-            }
-        }
-
-        @Override
-        public void onDisconnected(CameraDevice camera) {
-
-        }
-
-        @Override
-        public void onError(CameraDevice camera, int error) {
-            Log.e(TAG, "Open onError : " + error);
-
-        }
-    };
 
 }

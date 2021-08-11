@@ -44,7 +44,7 @@ public class FrameBuffer {
 
     private int mFrameBufferId;
     private int mFrameBufferTexId;
-    private int mFrameBufferTexId2;
+    //private int mFrameBufferTexId2;
 
     private int mWidth;
     private int mHeight;
@@ -59,9 +59,9 @@ public class FrameBuffer {
         return mFrameBufferTexId;
     }
 
-    public int getFrameBufferTexId2() {
-        return mFrameBufferTexId2;
-    }
+//    public int getFrameBufferTexId2() {
+//        return mFrameBufferTexId2;
+//    }
 
     public int getWidth() {
         return mWidth;
@@ -91,12 +91,12 @@ public class FrameBuffer {
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, mFrameBufferTexId, 0);
 
-        mFrameBufferTexId2 = GLUtil.genTexture();
-        glBindTexture(GL_TEXTURE_2D, mFrameBufferTexId2);
-        glTexImage2D(GL_TEXTURE_2D, 0, bufferType, (int)width, (int)height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mFrameBufferTexId2, 0);
+//        mFrameBufferTexId2 = GLUtil.genTexture();
+//        glBindTexture(GL_TEXTURE_2D, mFrameBufferTexId2);
+//        glTexImage2D(GL_TEXTURE_2D, 0, bufferType, (int)width, (int)height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (ByteBuffer) null);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+//        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+//        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, mFrameBufferTexId2, 0);
 
         // create a renderbuffer object for depth and stencil attachment (we won't be sampling these)
         int rbo = GLUtil.genRenderObject();
@@ -117,8 +117,9 @@ public class FrameBuffer {
         glGetIntegerv(GL_IMPLEMENTATION_COLOR_READ_FORMAT, readFormat);
         readFormat.position(0);
 
-        int[] attachments = new int[]{ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
-        glDrawBuffers(2, attachments, 0);
+        //int[] attachments = new int[]{ GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+        int[] attachments = new int[]{ GL_COLOR_ATTACHMENT0};
+        glDrawBuffers(1, attachments, 0);
 
         glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
@@ -130,11 +131,11 @@ public class FrameBuffer {
     }
 
     public void end() {
-        mDefFrameBufferId.position(0);
-        glGetIntegerv(GL_FRAMEBUFFER_DEFAULT, mDefFrameBufferId);
-        mDefFrameBufferId.position(0);
-        int id = mDefFrameBufferId.get(0);
-        glBindFramebuffer(GL_FRAMEBUFFER, id);
+//        mDefFrameBufferId.position(0);
+//        glGetIntegerv(GL_FRAMEBUFFER_DEFAULT, mDefFrameBufferId);
+//        mDefFrameBufferId.position(0);
+//        int id = mDefFrameBufferId.get(0);
+        glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
 

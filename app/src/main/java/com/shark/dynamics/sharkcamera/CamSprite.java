@@ -42,12 +42,6 @@ public class CamSprite {
         mWidth = width;
         mHeight = height;
         mModel.identity();
-//        float[] kPos = new float[]{
-//                -1.0f, -1.0f,
-//                1.0f, -1.0f,
-//                1.0f, 1.0f,
-//                -1.0f, 1.0f,
-//        };
         float[] kPos = new float[]{
                 0, 0,
                 mWidth, 0,
@@ -83,11 +77,13 @@ public class CamSprite {
 
     public void render() {
         mShader.use();
-        GLES30.glBindVertexArray(0);
+        //GLES30.glBindVertexArray(0);
 
-        GLES30.glActiveTexture(GLES30.GL_TEXTURE5);
-        GLES30.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, mTextureId);
-        mShader.setUniformInt("frameImage", 5);
+        if (mTextureId != -1) {
+            GLES30.glActiveTexture(GLES30.GL_TEXTURE5);
+            GLES30.glBindTexture(GLES11Ext.GL_TEXTURE_EXTERNAL_OES, mTextureId);
+            mShader.setUniformInt("frameImage", 5);
+        }
 
         glUniformMatrix4fv(mShader.getUniformLocation("proj"),
                 1,
@@ -109,6 +105,10 @@ public class CamSprite {
 
     public void updateTransformMatrix(float[] matrix) {
         mTransformMatrix = matrix;
+    }
+
+    public Shader getShader() {
+        return mShader;
     }
 
 }

@@ -10,6 +10,12 @@
         android:layout_height="match_parent"
         android:background="#0000"/>
 
+<!--    <com.shark.dynamics.sharkcamera.CamGLSurfaceView-->
+<!--        android:id="@+id/id_cam_preview_custom"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:background="#123"/>-->
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/id_prev_effect"
         android:layout_width="match_parent"
