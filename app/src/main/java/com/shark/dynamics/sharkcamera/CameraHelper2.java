@@ -30,7 +30,7 @@ public class CameraHelper2 {
     private static final String TAG = "Camera";
 
     private static CameraManager mCameraManager;
-    private int mCameraId = 1;
+    private int mCameraId = 0;
     private List<Size> mOutputSizes;
     private Size mPhotoSize;
     private CameraDevice mCameraDevice;
