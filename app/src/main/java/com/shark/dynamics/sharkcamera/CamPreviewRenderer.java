@@ -58,7 +58,7 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
     private int mPrevWidth;
     private int mPrevHeight;
 
-    private boolean mOnlyCamPrev = false;
+    private boolean mOnlyCamPrev = true;
 
     public CamPreviewRenderer(Context context) {
         mContext = context;
@@ -150,7 +150,7 @@ public class CamPreviewRenderer implements GLSurfaceView.Renderer {
 
     private void renderCamPrevOnly() {
         //updateYUVDataIfNeeded();
-        GLES32.glBindVertexArray(0);
+        //GLES32.glBindVertexArray(0);
         mSurfaceTexture.updateTexImage();
         mSurfaceTexture.getTransformMatrix(mCamTransformMatrix);
         mCamSprite.updateTransformMatrix(mCamTransformMatrix);

@@ -1,6 +1,6 @@
 #### 本项目提供的功能有 相机滤镜，动态贴纸，自定义效果，加载3D模型等
 
-#### 声明：上层按钮是贴纸，动画等功能，下层按钮是对整个画面做滤镜效果。部分效果取自[SharkMusic](https://github.com/shark-dynamics/shark-music-visualizer-android)。
+#### 声明：上层按钮是贴纸，动画等功能，下层按钮是对整个画面做滤镜效果。部分效果取自[SharkMusic](https://github.com/RGAA-Software/music_visualizer_android)。
 
 #### 1.动态贴纸
 ![](docs/anim2.jpg)
